@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#667eea',
+                        secondary: '#764ba2',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary to-secondary flex items-center justify-center p-5">
+    <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-2xl w-full">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="text-6xl mb-4">🔗</div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">URL Shortener</h1>
+            <p class="text-gray-600">Transform long URLs into short, shareable links</p>
+        </div>
+
+        <!-- Form -->
+        <form action="/shorten" method="post" class="space-y-5">
+            <div>
+                <label for="url" class="block text-gray-700 font-semibold mb-2">
+                    Enter your long URL:
+                </label>
+                <input
+                    type="url"
+                    id="url"
+                    name="url"
+                    placeholder="https://example.com/very/long/url/that/needs/shortening"
+                    required
+                    th:value="${originalUrl}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-primary transition-colors text-base"
+                >
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold py-4 rounded-xl hover:shadow-lg hover:-translate-y-0.5 transform transition-all duration-200 text-lg"
+            >
+                ✨ Shorten URL
+            </button>
+        </form>
+
+        <!-- Success Result -->
+        <div th:if="${success}" class="mt-8 p-6 bg-gray-50 rounded-xl border-l-4 border-primary">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">✅ Success! Your shortened URL:</h3>
+
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <div
+                    id="shortUrl"
+                    th:text="${shortUrl}"
+                    class="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg font-mono text-sm break-all"
+                ></div>
+                <button
+                    onclick="copyToClipboard()"
+                    class="px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all whitespace-nowrap"
+                    id="copyBtn"
+                >
+                    📋 Copy
+                </button>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-300">
+                <p class="text-sm text-gray-600 mb-1"><strong>Original URL:</strong></p>
+                <p class="text-sm text-gray-700 break-all" th:text="${originalUrl}"></p>
+            </div>
+
+            <p id="copyMessage" class="hidden mt-3 text-green-600 font-semibold">
+                ✓ Copied to clipboard!
+            </p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${error}" class="mt-8 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800">
+            <strong>⚠️ Error:</strong> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500">
+            <p>Click on the shortened link to track analytics and manage your URLs</p>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const shortUrl = document.getElementById('shortUrl').textContent;
+            const copyBtn = document.getElementById('copyBtn');
+            const copyMessage = document.getElementById('copyMessage');
+
+            navigator.clipboard.writeText(shortUrl).then(() => {
+                // Show success message
+                copyMessage.classList.remove('hidden');
+                copyBtn.classList.add('bg-green-500');
+                copyBtn.classList.remove('bg-primary');
+                copyBtn.textContent = '✓ Copied!';
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    copyMessage.classList.add('hidden');
+                    copyBtn.classList.remove('bg-green-500');
+                    copyBtn.classList.add('bg-primary');
+                    copyBtn.textContent = '📋 Copy';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+
+        // Auto-focus on URL input when page loads
+        window.onload = function() {
+            document.getElementById('url').focus();
+        };
+    </script>
+</body>
+</html>
+
+
