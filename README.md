@@ -2,6 +2,8 @@
 
 A modern, full-stack URL shortening service built with **Spring Boot** and **Thymeleaf**, featuring a beautiful **Tailwind CSS** frontend and RESTful API.
 
+This is a solution to the URL shortener project on roadmap.sh : https://roadmap.sh/projects/url-shortening-service
+
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.2-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
